@@ -1,0 +1,17 @@
+{% extends 'base.html' %} 
+{% block content %} 
+  <h1 class="text-center mb-3">Enquetes</h1>
+  {% if latest_question_list %}
+    {% for questao in latest_question_list %}
+      <div class="card mb-3">
+        <div class="card-body">
+          <p class="lead">{{ questao.questao_texto }}</p>
+          <a href="{% url 'enquete:detalhes' questao.id %}" class="btn btn-primary btn-sm">Vote agora</a>
+          <a href="{% url 'enquete:resultados' questao.id %}" class="btn btn-secondary btn-sm">Resultados</a>
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>No polls available</p>
+  {% endif %}
+{% endblock %}

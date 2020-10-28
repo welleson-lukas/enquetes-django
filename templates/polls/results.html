@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block content %}
+<script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<div class="row">
+	<div class="col-md-6 m-auto">
+
+		<h1 class="mb-5 text-center">{{ questao.questao_texto }}</h1>
+
+		<ul class="list-group mb-5">
+			{% for choice in questao.choice_set.all %}
+			<li class="list-group-item">
+				{{ choice.choice_text }}  <span class="badge badge-success float-right">{{ choice.votos }} voto{{ choice.votos | pluralize }}</span>
+			</li>
+			{% endfor %}
+		</ul>
+
+		<a class="btn btn-secondary" href="{% url 'enquete:index' %}">Voltar</a>
+		<a class="btn btn-dark" href="{% url 'enquete:detalhes' questao.id %}">Votar</a>
+	</div>
+</div>
+<br>
+<div id="myChart"></div>
+
+<script>
+	var state = {
+		'items':[],
+		'values':[],
+	}
+
+	var objId = "{{questao.id}}"
+	var dataURL = `/enquete/resultadodata/${objId}`
+
+	$.ajax({
+		method:'GET',
+		url: dataURL,
+		success:function(response){
+			console.log('RESPONSE:', response)
+			for (var i in response){
+
+				var key = Object.keys(response[i])[0]
+				var value = Object.values(response[i])[0]
+
+				state.items.push(key)
+				state.values.push(value)
+			}
+
+			console.log('STATE:', state)
+			executarChart()
+		}
+	})
+
+	function executarChart() {
+		var chartData = {
+			"type":"bar",
+			"title": {
+				"text": "Gráfico de votos"
+			},
+			"scale-x":{
+				"values":state.items
+			},
+			"series":[
+				{
+					"values":state.values
+				}
+			]
+		}
+		zingchart.render({
+		id: "myChart",
+		data: chartData,
+		});
+	}
+
+</script>
+{% endblock %}

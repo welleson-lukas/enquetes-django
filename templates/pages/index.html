@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="card text-center">
+  <div class="card-body">
+    <h1>Bem-vindo</h1>
+    <p>Este é um exemplo de aplicação Django</p>
+    <a class="btn btn-dark" href="{% url 'enquete:index' %}">
+        Abrir enquetes</a
+      >
+  </div>
+  </div>
+{% endblock %}
